@@ -1,4 +1,4 @@
-import { ErrorAlert, Loading } from './src/components';
+import { ErrorAlert, Loading } from '.';
 
 export default function LoadingError({ isLoading }) {
   return (

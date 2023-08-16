@@ -3,7 +3,7 @@ import {
   Accordion, AccordionDetails, AccordionSummary,
   Container, Grid, IconButton, Stack, Typography,
 } from '@mui/material';
-import LoadingError from '../../LoadingError';
+import LoadingError from '../components/LoadingError';
 import { usePostsQuery } from '../redux/api';
 import {
   CreatePostForm, Post,

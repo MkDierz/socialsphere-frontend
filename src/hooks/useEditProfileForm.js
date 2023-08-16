@@ -19,26 +19,28 @@ export default function useEditProfileForm() {
       bio: '',
       location: '',
       password: '',
+      compress: 'none',
     },
   });
 
   useEffect(() => {
     if (isFetchSuccess) {
       const {
-        email, name, username, Profile,
+        email, name, username, Profile, Config,
       } = dataFetched;
       const { bio, location } = Profile;
+      const { compress } = Config;
       reset({
-        email, name, username, bio, location,
+        email, name, username, bio, location, compress,
       });
     }
   }, [dataFetched, isFetchSuccess, reset]);
 
   const onSubmit = ({
-    name, username, email, bio, location, password,
+    name, username, email, bio, location, password, compress,
   }) => {
     updateProfile({
-      name, username, email, bio, location, password,
+      name, username, email, bio, location, password, compress,
     });
     // console.log(name, username, email, bio, location, password);
   };

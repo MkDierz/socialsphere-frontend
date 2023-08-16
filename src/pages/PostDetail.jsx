@@ -10,7 +10,7 @@ import { ArrowUpward } from '@mui/icons-material';
 import PropTypes from 'prop-types';
 import { usePostByIdQuery } from '../redux/api';
 import { CreatePostForm, Post } from '../components';
-import LoadingError from '../../LoadingError';
+import LoadingError from '../components/LoadingError';
 
 function GotoParentButton({ hasParent, action }) {
   return (

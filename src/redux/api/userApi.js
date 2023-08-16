@@ -15,7 +15,7 @@ export const userApi = api.injectEndpoints({
     }),
     profileUpdate: builder.mutation({
       query: ({
-        name, username, email, bio, location, password,
+        name, username, email, bio, location, password, compress,
       }) => {
         const body = {
           ...(name && { name }),
@@ -24,6 +24,7 @@ export const userApi = api.injectEndpoints({
           ...(bio && { bio }),
           ...(location && { location }),
           ...(password && { password }),
+          ...(compress && { compress }),
         };
         return {
           url: '/user/profile',

@@ -5,7 +5,8 @@ import {
 import { Tag } from '@mui/icons-material';
 import { grey } from '@mui/material/colors';
 import { useTagByIdQuery } from '../redux/api/tagApi';
-import LoadingError from '../../LoadingError';
+import LoadingError from '../components/LoadingError';
+
 import { Post, UserAvatar } from '../components';
 import { timeAgo } from '../utils';
 

@@ -1,6 +1,8 @@
+import { Buffer } from 'buffer';
 import { fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
 import { Mutex } from 'async-mutex';
 import { toast } from 'react-toastify';
+import { decompress } from '@mkdierz/json-compressor';
 import { BASE_URL } from '../../config';
 
 const mutex = new Mutex();
@@ -33,13 +35,31 @@ function refresh(refreshToken, api, extraOptions) {
 
 async function customFetchBase(args, api, extraOptions) {
   const { getState } = api;
-  const { auth } = getState();
+  const { auth, user } = getState();
+  const { compress } = user.config;
   const { refreshToken } = auth;
+  const newArgs = args;
+  newArgs.headers = {
+    ...args.headers,
+    'Compressed-Response': compress,
+  };
+
+  if (compress !== 'none') {
+    const transformResponse = async (response, meta, arg) => {
+      const arrayBuffer = await response.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer, 'utf-8');
+      const decompressed = decompress(buffer);
+      return decompressed;
+    };
+
+    newArgs.responseHandler = transformResponse;
+  }
 
   await mutex.waitForUnlock();
 
-  const result = await baseQuery(args, api, extraOptions);
-
+  // const result = await baseQuery(args, api, extraOptions);
+  const result = await baseQuery(newArgs, api, extraOptions);
+  console.log(result.data);
   if (!result.error) {
     return result;
   }

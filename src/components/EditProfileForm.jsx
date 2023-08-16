@@ -5,6 +5,7 @@ import { useState } from 'react';
 import FormInputText from './FormInputText';
 import CreateTagForm from './CreateTagForm';
 import useEditProfileForm from '../hooks/useEditProfileForm';
+import FormSelect from './FormSelect';
 
 export default function EditProfileForm() {
   const {
@@ -21,6 +22,12 @@ export default function EditProfileForm() {
         name="name"
         control={control}
         label="Full Name"
+        type="text"
+      />
+      <FormInputText
+        name="username"
+        control={control}
+        label="username"
         type="text"
       />
       <FormInputText
@@ -47,6 +54,17 @@ export default function EditProfileForm() {
         control={control}
         label="Location"
         type="text"
+      />
+      <FormSelect
+        name="compress"
+        control={control}
+        label="Compression Method"
+        options={[
+          { value: 'none', label: 'none' },
+          { value: 'full', label: 'full' },
+          { value: 'gzip', label: 'gzip' },
+          { value: 'hpack', label: 'hpack' },
+        ]}
       />
       <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
         Update Profile

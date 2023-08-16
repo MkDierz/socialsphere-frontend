@@ -1,9 +1,5 @@
-FROM node:19-alpine
+FROM node:16-alpine as builder
 WORKDIR /app
-COPY package.json ./
-COPY yarn.lock ./
-RUN yarn install
 COPY . .
-RUN yarn run build
-RUN yarn global add serve
-CMD ["npx", "serve", "dist"]
+RUN npm ci 
+RUN npm run build

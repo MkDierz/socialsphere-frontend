@@ -4,7 +4,7 @@ import QuoteCard from '../components/QuoteCard';
 import { useAppSelector } from '../redux/store';
 import { usePostsByUserQuery } from '../redux/api';
 import { Post } from '../components';
-import LoadingError from '../../LoadingError';
+import LoadingError from '../components/LoadingError';
 
 function UserProfile() {
   const { user, profile } = useAppSelector((state) => state.user);

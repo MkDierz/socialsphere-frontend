@@ -14,8 +14,10 @@ import ErrorAlert from './ErrorAlert';
 import UserAvatar from './UserAvatar';
 import ProfileAvatar from './ProfileAvatar';
 import EditProfileForm from './EditProfileForm';
+import FormSelect from './FormSelect';
 
 export {
+  FormSelect,
   EditProfileForm,
   ProfileAvatar,
   UserAvatar,

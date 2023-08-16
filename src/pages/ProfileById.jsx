@@ -4,7 +4,7 @@ import ProfileCard from '../components/ProfileCard';
 import QuoteCard from '../components/QuoteCard';
 import { usePostsByUserQuery, useProfileByIdQuery } from '../redux/api';
 import { Post } from '../components';
-import LoadingError from '../../LoadingError';
+import LoadingError from '../components/LoadingError';
 
 function UserProfileById() {
   const { id } = useParams();

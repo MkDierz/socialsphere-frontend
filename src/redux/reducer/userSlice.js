@@ -22,6 +22,9 @@ const initialState = {
     createdAt: null,
     updatedAt: null,
   },
+  config: {
+    compress: 'none',
+  },
 };
 
 const userSlice = createSlice({
@@ -30,21 +33,24 @@ const userSlice = createSlice({
   reducers: {
     resetUser: () => initialState,
     updateUser: (state, action) => {
-      const { Profile, ...user } = action.payload;
+      const { Profile, Config, ...user } = action.payload;
       state.profile = Profile;
       state.user = user;
+      state.config = Config;
     },
   },
   extraReducers: (builder) => {
     builder
       .addMatcher(userApi.endpoints.profile.matchFulfilled, (state, action) => {
-        const { Profile: profile, ...user } = action.payload;
+        const { Profile, Config, ...user } = action.payload;
         state.user = user;
-        state.profile = profile;
+        state.profile = Profile;
+        state.config = Config;
       })
       .addMatcher(authApi.endpoints.logout.matchFulfilled, (state) => {
         state.user = {};
         state.profile = {};
+        state.config = {};
       });
   },
 });
