@@ -45,7 +45,7 @@ async function customFetchBase(args, api, extraOptions) {
   };
 
   if (compress !== 'none') {
-    const transformResponse = async (response, meta, arg) => {
+    const transformResponse = async (response) => {
       const arrayBuffer = await response.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer, 'utf-8');
       const decompressed = decompress(buffer);
@@ -57,9 +57,7 @@ async function customFetchBase(args, api, extraOptions) {
 
   await mutex.waitForUnlock();
 
-  // const result = await baseQuery(args, api, extraOptions);
   const result = await baseQuery(newArgs, api, extraOptions);
-  console.log(result.data);
   if (!result.error) {
     return result;
   }
@@ -82,7 +80,7 @@ async function customFetchBase(args, api, extraOptions) {
 
   const release = await mutex.acquire();
   try {
-    const r = refresh(refreshToken, api, extraOptions).then(async (response) => {
+    const promise = refresh(refreshToken, api, extraOptions).then(async (response) => {
       if (response.data) {
         await api.dispatch({ type: 'auth/login', payload: response.data });
         return baseQuery(args, api, extraOptions);
@@ -91,7 +89,7 @@ async function customFetchBase(args, api, extraOptions) {
       return api.dispatch({ type: 'user/resetUser' });
     });
     toast.promise(
-      r,
+      promise,
       {
         pending: 'Refreshing token',
         success: 'Token Refreshed',

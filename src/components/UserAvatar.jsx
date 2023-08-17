@@ -22,10 +22,10 @@ function UserAvatar({ user }) {
   );
 }
 UserAvatar.propTypes = {
-  user: PropTypes.objectOf(PropTypes.shape({
+  user: PropTypes.shape({
     avatar: PropTypes.string,
     name: PropTypes.string,
-    id: PropTypes.string,
-  })).isRequired,
+    id: PropTypes.number,
+  }).isRequired,
 };
 export default UserAvatar;
