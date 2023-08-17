@@ -36,7 +36,7 @@ function refresh(refreshToken, api, extraOptions) {
 async function customFetchBase(args, api, extraOptions) {
   const { getState } = api;
   const { auth, user } = getState();
-  const { compress } = user.config;
+  const compress = user.config.compress || 'none';
   const { refreshToken } = auth;
   const newArgs = args;
   newArgs.headers = {
