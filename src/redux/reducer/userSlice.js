@@ -48,9 +48,9 @@ const userSlice = createSlice({
         state.config = Config;
       })
       .addMatcher(authApi.endpoints.logout.matchFulfilled, (state) => {
-        state.user = {};
-        state.profile = {};
-        state.config = {};
+        state.user = initialState.user;
+        state.profile = initialState.profile;
+        state.config = initialState.config;
       });
   },
 });

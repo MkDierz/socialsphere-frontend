@@ -26,7 +26,7 @@ export const authApi = api.injectEndpoints({
               },
             },
           },
-          await queryFulfilled.then(() => {
+          queryFulfilled.then(() => {
             dispatch(userApi.endpoints.profile.initiate(null)).refetch();
           }),
         );
