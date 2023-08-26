@@ -2,8 +2,19 @@ import { Buffer } from 'buffer';
 import { fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
 import { Mutex } from 'async-mutex';
 import { toast } from 'react-toastify';
-import { decompress } from '@mkdierz/json-compressor';
+import { decompress, gunzip, unpack } from '@mkdierz/json-compressor';
 import { BASE_URL } from '../../config';
+
+function calculateSize(data) {
+  if (typeof data === 'string' || data instanceof String || data instanceof Buffer) {
+    return Buffer.byteLength(data);
+  }
+
+  if (typeof data === 'object') {
+    return Buffer.byteLength(JSON.stringify(data));
+  }
+  return 0;
+}
 
 const mutex = new Mutex();
 
@@ -34,28 +45,64 @@ function refresh(refreshToken, api, extraOptions) {
 }
 
 async function customFetchBase(args, api, extraOptions) {
-  const { getState } = api;
+  await mutex.waitForUnlock();
+  const { getState, dispatch } = api;
   const { auth, user } = getState();
   const compress = user.config.compress || 'none';
   const { refreshToken } = auth;
-  const newArgs = args;
-  newArgs.headers = {
-    ...args.headers,
-    'Compressed-Response': compress,
-  };
+  const newArgs = {
+    ...args,
+    headers: {
+      ...args.headers,
+      'Compressed-Response': compress,
+    },
+    responseHandler: async (response) => {
+      let decompressed;
+      const responseType = response.headers.get('compressed-response');
+      const log = {
+        time: new Date().toISOString(),
+        type: responseType,
+        url: response.url,
+      };
+      let temp;
+      switch (responseType) {
+        case 'full':
+          temp = Buffer.from(await response.arrayBuffer(), 'utf-8');
+          log.sizeOrigin = calculateSize(temp);
+          decompressed = decompress(temp, false);
+          break;
 
-  if (compress !== 'none') {
-    const transformResponse = async (response) => {
-      const arrayBuffer = await response.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer, 'utf-8');
-      const decompressed = decompress(buffer);
+        case 'hpack':
+          temp = await response.json();
+          log.sizeOrigin = calculateSize(temp);
+          decompressed = unpack(temp, false, false);
+          break;
+
+        case 'gzip':
+          temp = Buffer.from(await response.arrayBuffer(), 'utf-8');
+          log.sizeOrigin = calculateSize(temp);
+          decompressed = JSON.parse(gunzip(temp), false);
+          break;
+
+        case 'none':
+          temp = await response.json();
+          log.sizeOrigin = calculateSize(temp);
+          decompressed = temp;
+          break;
+
+        default:
+          temp = await response.json();
+          log.sizeOrigin = calculateSize(temp);
+          decompressed = temp;
+          break;
+      }
+
+      log.sizeAfter = calculateSize(decompressed);
+      await dispatch({ type: 'log/add', payload: { ...log } });
+
       return decompressed;
-    };
-
-    newArgs.responseHandler = transformResponse;
-  }
-
-  await mutex.waitForUnlock();
+    },
+  };
 
   const result = await baseQuery(newArgs, api, extraOptions);
   if (!result.error) {
@@ -63,7 +110,7 @@ async function customFetchBase(args, api, extraOptions) {
   }
 
   const { status } = result.error;
-  const isUnauthorized = status === 401;
+  const isUnauthorized = (status === 401);
 
   if (!(isUnauthorized)) {
     return result;

@@ -16,7 +16,7 @@ export const tagApi = api.injectEndpoints({
         if (userId !== undefined) {
           queries.push(`userId=${userId}`);
         }
-        const url = (queries.length === 0) ? '/tag' : `/tag?${queries.join('&')}`;
+        const url = (queries.length === 0) ? '/tag/' : `/tag?${queries.join('&')}`;
         return {
           url,
           credentials: 'include',

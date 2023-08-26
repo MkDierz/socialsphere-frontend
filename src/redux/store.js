@@ -11,7 +11,7 @@ import {
   REHYDRATE,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import { authSlice, userSlice } from './reducer';
+import { authSlice, logSlice, userSlice } from './reducer';
 import { api } from './api/baseApi';
 
 const persistConfig = {
@@ -28,6 +28,7 @@ export const createStore = (options) => configureStore({
   reducer: {
     auth: authPersist,
     user: userPersist,
+    log: logSlice,
     [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({

@@ -15,8 +15,15 @@ import UserAvatar from './UserAvatar';
 import ProfileAvatar from './ProfileAvatar';
 import EditProfileForm from './EditProfileForm';
 import FormSelect from './FormSelect';
+import Log from './Log';
+import Footer from './Footer';
+import Navbar from './Navbar';
 
 export {
+  withRouter,
+  Navbar,
+  Footer,
+  Log,
   FormSelect,
   EditProfileForm,
   ProfileAvatar,
@@ -25,7 +32,6 @@ export {
   Loading,
   CreateTagForm,
   FormSelectMultiple,
-  withRouter,
   LinkBehavior,
   FormInputText,
   Copyright,

@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
 import { Box, CircularProgress } from '@mui/material';
 import { useEffect } from 'react';
-import withRouter from '../components/withRouter';
-import Navbar from '../components/Navbar';
+import { Footer, Navbar, withRouter } from '../components';
 import { useProfileQuery } from '../redux/api/userApi';
 import { useAppSelector } from '../redux';
 
@@ -38,11 +37,13 @@ function AuthorizedLayout({ children }) {
   }
 
   return (
-    <>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <Navbar />
-      {children}
-      {' '}
-    </>
+      <Box sx={{ overflow: 'auto', flexGrow: 1 }}>
+        {children}
+      </Box>
+      <Footer />
+    </div>
   );
 }
 
