@@ -2,19 +2,10 @@ import { Buffer } from 'buffer';
 import { fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
 import { Mutex } from 'async-mutex';
 import { toast } from 'react-toastify';
-import { decompress, gunzip, unpack } from '@mkdierz/json-compressor';
+import {
+  calculateSize, decompress, gunzip, unpack,
+} from '@mkdierz/json-compressor';
 import { BASE_URL } from '../../config';
-
-function calculateSize(data) {
-  if (typeof data === 'string' || data instanceof String || data instanceof Buffer) {
-    return Buffer.byteLength(data);
-  }
-
-  if (typeof data === 'object') {
-    return Buffer.byteLength(JSON.stringify(data));
-  }
-  return 0;
-}
 
 const mutex = new Mutex();
 
